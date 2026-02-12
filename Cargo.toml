@@ -11,6 +11,11 @@ gpui-anim = { git = "https://github.com/zincneo/gpui-anim", branch="main" }
 macro_rules_attribute = "0.2.2"
 smol = "2.0.2"
 smol-macros = "0.1.1"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+tracing-appender = "0.2.4"
+dirs = "6.0.0"
+chrono = "0.4.43"
 
 # Enable more optimization in the release profile at the cost of compile time.
 [profile.release]
