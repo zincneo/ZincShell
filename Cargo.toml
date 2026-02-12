@@ -1,0 +1,22 @@
+[package]
+name = "zinc_shell"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui-component = { git = "https://github.com/zincneo/gpui-component", branch="no-window-shadow" }
+gpui-anim = { git = "https://github.com/zincneo/gpui-anim", branch="main" }
+macro_rules_attribute = "0.2.2"
+smol = "2.0.2"
+smol-macros = "0.1.1"
+
+# Enable more optimization in the release profile at the cost of compile time.
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = "z"
+panic = "abort"
+strip = true
+debug = false
