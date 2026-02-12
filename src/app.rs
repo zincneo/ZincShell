@@ -1,6 +1,10 @@
-use gpui::SharedString;
+use gpui::{App, SharedString};
 use gpui_component::{Theme, ThemeRegistry};
-pub async fn run() {
+use smol::channel::Receiver;
+
+use crate::Event;
+
+pub async fn run(rx: Receiver<Event>) {
     let application = gpui::Application::new().with_quit_mode(gpui::QuitMode::Explicit);
     application.run(move |app| {
         gpui_component::init(app);
@@ -10,5 +14,20 @@ pub async fn run() {
                 Theme::global_mut(cx).apply_config(&theme);
             }
         });
+        app.on_window_closed(on_closed).detach();
+
+        let app = app.to_async();
+        app.spawn(async move |app| {
+            event_handle(app, rx).await;
+        })
+        .detach();
     });
 }
+
+async fn event_handle(_app: &mut gpui::AsyncApp, rx: Receiver<Event>) {
+    while let Ok(event) = rx.recv().await {
+        match event {}
+    }
+}
+
+fn on_closed(_app: &mut App) {}
