@@ -1,11 +1,11 @@
+use crate::Event;
 use gpui::{App, SharedString};
 use gpui_component::{Theme, ThemeRegistry};
+use gpui_platform::application;
 use smol::channel::Receiver;
 
-use crate::Event;
-
 pub async fn run(rx: Receiver<Event>) {
-    let application = gpui::Application::new().with_quit_mode(gpui::QuitMode::Explicit);
+    let application = application().with_quit_mode(gpui::QuitMode::LastWindowClosed);
     application.run(move |app| {
         gpui_component::init(app);
         let theme_name = SharedString::from("Catppuccin Macchiato");
@@ -24,9 +24,20 @@ pub async fn run(rx: Receiver<Event>) {
     });
 }
 
-async fn event_handle(_app: &mut gpui::AsyncApp, rx: Receiver<Event>) {
+async fn event_handle(app: &mut gpui::AsyncApp, rx: Receiver<Event>) {
     while let Ok(event) = rx.recv().await {
-        match event {}
+        match event {
+            Event::Background => {
+                if let Err(e) = crate::background::start(app).await {
+                    tracing::error!("{e:?}");
+                }
+            }
+            Event::Wallpaper => {
+                if let Err(e) = crate::wallpaper::start(app).await {
+                    tracing::error!("{e:?}");
+                }
+            }
+        }
     }
 }
 

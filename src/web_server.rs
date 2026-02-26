@@ -2,7 +2,9 @@ use crate::Event;
 use smol::channel::Sender;
 use smol::{io::AsyncReadExt, net, stream::StreamExt};
 
-pub async fn run(_tx: Sender<Event>) -> anyhow::Result<()> {
+pub async fn run(tx: Sender<Event>) -> anyhow::Result<()> {
+    tx.send(Event::Background).await?;
+    tx.send(Event::Wallpaper).await?;
     let listener = net::TcpListener::bind("127.0.0.1:4343").await?;
     let mut buffer = [0; 1024];
     while let Some(stream) = listener.incoming().next().await {
