@@ -1,4 +1,4 @@
-use crate::Event;
+use crate::{Event, utilities};
 use gpui::{App, SharedString};
 use gpui_component::{Theme, ThemeRegistry};
 use gpui_platform::application;
@@ -37,8 +37,32 @@ async fn event_handle(app: &mut gpui::AsyncApp, rx: Receiver<Event>) {
                     tracing::error!("{e:?}");
                 }
             }
+            Event::Top => {
+                if let Some(_) = utilities::has_top_window() {
+                    continue;
+                }
+                match crate::top::start(app).await {
+                    Ok(handle) => {
+                        utilities::set_top_window(Some(handle));
+                    }
+                    Err(e) => {
+                        tracing::error!("{e:?}");
+                    }
+                }
+            }
         }
     }
 }
 
-fn on_closed(_app: &mut App) {}
+fn on_closed(app: &mut App) {
+    let mut ids = vec![];
+    app.windows()
+        .iter()
+        .for_each(|handle| ids.push(handle.window_id()));
+    if let Some(top_id) = utilities::has_top_window() {
+        if !ids.contains(&top_id) {
+            utilities::set_top_window(None);
+            tracing::info!("remove top window");
+        }
+    }
+}

@@ -30,10 +30,7 @@ fn cleanup_old_logs(dir: &PathBuf) -> Result<()> {
 
 pub fn init() -> Result<()> {
     let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| {
-        EnvFilter::new("off")
-            .add_directive("zinc_shell=info".parse().unwrap())
-            .add_directive("gpui=info".parse().unwrap())
-            .add_directive("gpui_component=info".parse().unwrap())
+        EnvFilter::new("off").add_directive("zinc_shell=info".parse().unwrap())
     });
 
     #[cfg(debug_assertions)]

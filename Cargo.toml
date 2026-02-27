@@ -8,6 +8,7 @@ anyhow = "1.0.100"
 gpui = { git = "https://github.com/zed-industries/zed", rev = "938b8ab7"}
 gpui_platform = { git = "https://github.com/zed-industries/zed", package = "gpui_platform", features = ["font-kit", "x11", "wayland", "runtime_shaders"], rev = "938b8ab7" }
 gpui-component = { git = "https://github.com/zincneo/gpui-component", branch="main" }
+gpui-anim = { git = "https://github.com/zincneo/gpui-anim", branch="main" }
 macro_rules_attribute = "0.2.2"
 smol = "2.0.2"
 smol-macros = "0.1.1"

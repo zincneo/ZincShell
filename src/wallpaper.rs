@@ -29,7 +29,7 @@ impl RootView {
             .size_full()
             .child(img)
     }
-    fn top(&self, _background: Rgba) -> Stateful<Div> {
+    fn top(&self, background: Rgba) -> Stateful<Div> {
         div()
             .id("top")
             .absolute()
@@ -37,9 +37,14 @@ impl RootView {
             .left_0()
             .w_full()
             .h(self.width * TOP_FACTOR)
-            .on_hover(|_is_hover, _, _| {})
+            .bg(background)
+            .on_hover(|is_hover, _, _| {
+                if *is_hover {
+                    utilities::send(Event::Top);
+                }
+            })
     }
-    fn bottom(&self, _background: Rgba) -> Stateful<Div> {
+    fn bottom(&self, background: Rgba) -> Stateful<Div> {
         div()
             .id("bottom")
             .absolute()
@@ -47,9 +52,10 @@ impl RootView {
             .left_0()
             .w_full()
             .h(px(BOTTOM))
+            .bg(background)
             .on_hover(|_is_hover, _, _| {})
     }
-    fn left(&self, _background: Rgba) -> Stateful<Div> {
+    fn left(&self, background: Rgba) -> Stateful<Div> {
         div()
             .id("left")
             .absolute()
@@ -57,9 +63,10 @@ impl RootView {
             .top(self.width * TOP_FACTOR)
             .w(self.width * LEFT_FACTOR)
             .h(self.height - self.width * TOP_FACTOR - px(BOTTOM))
+            .bg(background)
             .on_hover(|_is_hover, _, _| {})
     }
-    fn right(&self, _background: Rgba) -> Stateful<Div> {
+    fn right(&self, background: Rgba) -> Stateful<Div> {
         div()
             .id("right")
             .absolute()
@@ -67,12 +74,12 @@ impl RootView {
             .top(self.width * TOP_FACTOR)
             .w(px(RIGHT))
             .h(self.height - self.width * TOP_FACTOR - px(BOTTOM))
+            .bg(background)
     }
 
     fn corners(&self, background: Rgba) -> Stateful<Div> {
         let (width, height) = (self.width.clone(), self.height.clone());
         let r = self.width * RADIUS_FACTOR;
-        println!("radius: {r}");
         let radii = point(r, r);
         let x_rotation = px(0.);
         let mut lines = vec![];
